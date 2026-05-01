@@ -121,7 +121,9 @@ def catalog_request(path: str, method: str = "GET", body: dict | None = None) ->
             return json.loads(response.read().decode("utf-8"))
     except urllib.error.HTTPError as error:
         detail = error.read().decode("utf-8")
-        raise HTTPException(status_code=error.code, detail=f"Catalog Service error: {detail}")
+        raise HTTPException(
+            status_code=error.code, detail=f"Catalog Service error: {detail}"
+        )
     except urllib.error.URLError as error:
         raise HTTPException(
             status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
@@ -131,7 +133,9 @@ def catalog_request(path: str, method: str = "GET", body: dict | None = None) ->
 
 def order_from_database(order_id: int, database: sqlite3.Connection) -> Order | None:
     """Build an order response model from database records."""
-    order_row = database.execute("SELECT * FROM orders WHERE id = ?", (order_id,)).fetchone()
+    order_row = database.execute(
+        "SELECT * FROM orders WHERE id = ?", (order_id,)
+    ).fetchone()
     if order_row is None:
         return None
 
@@ -179,7 +183,9 @@ def create_order(order: OrderCreate, database: Database) -> Order:
             )
         product_details.append((item, product))
 
-    total_amount = sum(item.quantity * product["price"] for item, product in product_details)
+    total_amount = sum(
+        item.quantity * product["price"] for item, product in product_details
+    )
 
     for item, _product in product_details:
         catalog_request(
@@ -203,7 +209,13 @@ def create_order(order: OrderCreate, database: Database) -> Order:
             INSERT INTO order_items (order_id, product_id, product_name, quantity, unit_price)
             VALUES (?, ?, ?, ?, ?)
             """,
-            (order_id, item.product_id, product["name"], item.quantity, product["price"]),
+            (
+                order_id,
+                item.product_id,
+                product["name"],
+                item.quantity,
+                product["price"],
+            ),
         )
 
     created_order = order_from_database(order_id, database)
@@ -225,5 +237,7 @@ def get_order(order_id: int, database: Database) -> Order:
     """Return a single order by ID."""
     order = order_from_database(order_id, database)
     if order is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Order not found")
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="Order not found"
+        )
     return order

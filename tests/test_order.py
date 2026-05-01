@@ -22,6 +22,7 @@ def products():
 @pytest.fixture
 def client(monkeypatch, products):
     """Create a test client with a fake Catalog Service dependency."""
+
     def fake_catalog_request(path, method="GET", body=None):
         """Return product data or reserve stock for mocked catalog calls."""
         if path.startswith("/products/") and method == "GET":
@@ -30,7 +31,11 @@ def client(monkeypatch, products):
                 return products[product_id]
             raise AssertionError(f"Unexpected product id: {product_id}")
 
-        if path.startswith("/products/") and path.endswith("/reserve") and method == "POST":
+        if (
+            path.startswith("/products/")
+            and path.endswith("/reserve")
+            and method == "POST"
+        ):
             product_id = int(path.split("/")[-2])
             products[product_id]["stock"] -= body["quantity"]
             return products[product_id]
