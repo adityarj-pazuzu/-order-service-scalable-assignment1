@@ -3,13 +3,11 @@ import os
 import sqlite3
 import urllib.error
 import urllib.request
-from contextlib import asynccontextmanager
-from contextlib import contextmanager
+from contextlib import asynccontextmanager, contextmanager
 from typing import Annotated
 
 from fastapi import Depends, FastAPI, HTTPException, status
 from pydantic import BaseModel, Field
-
 
 DATABASE_PATH = os.getenv("DATABASE_PATH", "orders.db")
 CATALOG_SERVICE_URL = os.getenv("CATALOG_SERVICE_URL", "http://localhost:8001")
@@ -71,18 +69,15 @@ def db_session():
 def initialize_database() -> None:
     """Create the order tables if they do not already exist."""
     with db_session() as connection:
-        connection.execute(
-            """
+        connection.execute("""
             CREATE TABLE IF NOT EXISTS orders (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 customer_name TEXT NOT NULL,
                 status TEXT NOT NULL,
                 total_amount REAL NOT NULL
             )
-            """
-        )
-        connection.execute(
-            """
+            """)
+        connection.execute("""
             CREATE TABLE IF NOT EXISTS order_items (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 order_id INTEGER NOT NULL,
@@ -92,8 +87,7 @@ def initialize_database() -> None:
                 unit_price REAL NOT NULL,
                 FOREIGN KEY (order_id) REFERENCES orders (id)
             )
-            """
-        )
+            """)
 
 
 def database_dependency():
