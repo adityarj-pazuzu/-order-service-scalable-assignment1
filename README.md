@@ -11,11 +11,19 @@ The Order Service manages customer orders. It calls the Catalog Service over HTT
 
 ## Run Locally
 
+To test the Order Service with the Catalog Service, Clone the https://github.com/adityarj-pazuzu/catalog-service-scalable-assignment1
+
+Without the Catalog Service, you can still test the Order Service's endpoints, but order creation will fail due to the inability to check product information and reserve stock.
+What can work without the Catalog Service:
+- Health check endpoint will work.
+- List orders endpoint will work (will return empty list if no orders created).
+- Get order details endpoint will work for existing orders, but creating new orders will fail.
+
 ```powershell
 python -m venv .venv
 .\.venv\Scripts\Activate.ps1
 pip install -r requirements.txt
-$env:CATALOG_SERVICE_URL="http://localhost:8001"
+$env:CATALOG_SERVICE_URL="http://localhost:8001" # Required if testing with Catalog Service running on localhost
 uvicorn app.main:app --host 0.0.0.0 --port 8002
 ```
 
@@ -65,6 +73,8 @@ curl http://localhost:8002/health
 ```
 
 ### Create an Order
+
+Before creating an order, ensure a product exists in the Catalog Service (see the Catalog Service README for how to create products).
 
 **PowerShell:**
 
@@ -116,7 +126,7 @@ Build the image:
 docker build -t order-service:1.0 .
 ```
 
-Run the container. The Catalog Service must be reachable through `CATALOG_SERVICE_URL`.
+Run the container. The Catalog Service must be reachable through the `CATALOG_SERVICE_URL` environment variable:
 
 ```powershell
 docker network create store-network
@@ -145,6 +155,7 @@ Access the service:
 ```powershell
 minikube service order-service -n store-app
 ```
+
 ### Kubernetes Dashboard
 
 Enable and open the dashboard:
@@ -156,7 +167,7 @@ minikube dashboard
 In the dashboard:
 
 - Select the namespace `store-app` then check the resources:
-  - Deployments: `catalog-service`
+  - Deployments: `order-service`
   - Pods: running status and restart count
   - Services: NodePort service exposure
   - Logs: request handling and any service communication errors
@@ -176,4 +187,4 @@ The current workflow does not need credentials because it does not push images o
 - `DOCKERHUB_USERNAME`
 - `DOCKERHUB_TOKEN`
 
-If Kubernetes deployment is added later, add Kubernetes or cloud credentials as GitHub Actions secrets. Never hardcode passwords, tokens, or kubeconfig values in the workflow file.
+Never hardcode passwords, tokens, or kubeconfig values in the workflow file.
