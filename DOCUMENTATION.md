@@ -10,7 +10,7 @@ For this assignment, two core microservices are implemented:
 
     https://github.com/adityarj-pazuzu/catalog-service-scalable-assignment1
 - **Order Service**: creates customer orders and communicates with the Catalog Service to validate products and reserve stock
-    
+
     https://github.com/adityarj-pazuzu/order-service-scalable-assignment1
 
 
@@ -18,8 +18,8 @@ For this assignment, two core microservices are implemented:
 
 ### 2.1 Architecture Style
 
-The application follows a **microservices architecture**. 
-Each service has a specific business responsibility and owns its own database. 
+The application follows a **microservices architecture**.
+Each service has a specific business responsibility and owns its own database.
 The services communicate through REST APIs over HTTP.
 
 Main architecture decisions:
@@ -140,8 +140,8 @@ catalog-service/
     Dockerfile
     README.md
     requirements.txt
-    
-### Microservice 2: OrderService  
+
+### Microservice 2: OrderService
 order-service/
 .github/
   workflows/
@@ -162,8 +162,8 @@ README.md
 requirements.txt
 ```
 
-The `catalog-service` and `order-service` folders are separate Git repositories. 
-Each service has its own README, tests, Dockerfile, pre-commit configuration, GitHub Actions workflow, and Kubernetes manifests. 
+The `catalog-service` and `order-service` folders are separate Git repositories.
+Each service has its own README, tests, Dockerfile, pre-commit configuration, GitHub Actions workflow, and Kubernetes manifests.
 
 
 ## 5. Implementation Steps
@@ -636,10 +636,10 @@ Order Service tests:
 Run tests:
 
 ```bash
-cd catalog-service-scalable-assignment1 
+cd catalog-service-scalable-assignment1
 pytest
 
-cd order-service-scalable-assignment1 
+cd order-service-scalable-assignment1
 pytest
 ```
 
@@ -650,10 +650,10 @@ Make sure to start the Docker service/Docker Desktop if it is not already runnin
 ### 9.1 Build Images
 
 ```bash
-cd catalog-service-scalable-assignment1 
+cd catalog-service-scalable-assignment1
 docker build -t catalog-service:1.0 .
 
-cd order-service-scalable-assignment1 
+cd order-service-scalable-assignment1
 docker build -t order-service:1.0 .
 ```
 
@@ -690,7 +690,7 @@ curl http://localhost:8002/health
 
 ## 10. Kubernetes Deployment Plan
 Install minikube and kubectl on your machine before executing these steps.
-Make sure to start the minikube cluster if it is not already running. 
+Make sure to start the minikube cluster if it is not already running.
 ### 10.1 Start Minikube
 
 ```powershell
